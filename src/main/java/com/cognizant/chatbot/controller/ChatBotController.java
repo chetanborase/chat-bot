@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/chatbot")
+@RequestMapping(value = "/qna")
+@CrossOrigin
 public class ChatBotController{
     private final ChatBotService chatBotService;
 
@@ -18,7 +19,7 @@ public class ChatBotController{
     }
 
     @GetMapping
-    public ResponseEntity<List<Message>> searchMessage(@RequestParam(name = "key") String key){
+    public ResponseEntity<List<Message>> searchMessage(@RequestParam(name = "q") String key){
         List<Message> questions = chatBotService.searchQuestions(key);
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }

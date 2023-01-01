@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ChatBotService {
@@ -23,7 +22,11 @@ public class ChatBotService {
 
         List<Message> messages = new ArrayList<>();
         for (FAQ q : faqs) {
-            messages.add(Message.mapFromFAQ(q));
+            Message message = new Message();
+            message.setId(q.getId());
+            message.setContent(q.getQuestion());
+
+            messages.add(message);
         }
 
         return messages;
