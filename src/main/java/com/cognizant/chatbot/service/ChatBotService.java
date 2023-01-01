@@ -1,20 +1,36 @@
 package com.cognizant.chatbot.service;
 
+import com.cognizant.chatbot.dto.Message;
 import com.cognizant.chatbot.entity.FAQ;
 import com.cognizant.chatbot.repository.ChatBotRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatBotService {
 
-    @Autowired
-    private ChatBotRepository chatBotRepository;
+    private final ChatBotRepository chatBotRepository;
 
-    public List<FAQ> searchQuestions(String keyword){
+    public ChatBotService(ChatBotRepository chatBotRepository) {
+        this.chatBotRepository = chatBotRepository;
+    }
 
-        return chatBotRepository.findByQuestion(keyword);
+    public List<Message> searchQuestions(String keyword){
+        List<FAQ> faqs = chatBotRepository.searchFAQByQuestionContainsOrAnswerContaining(keyword,keyword);
+
+        List<Message> messages = new ArrayList<>();
+        for (FAQ q : faqs) {
+            messages.add(Message.mapFromFAQ(q));
+        }
+
+        return messages;
+    }
+
+    public Message getById(Long id) {
+        FAQ faq   = chatBotRepository.findFAQById(id);
+        return Message.mapFromFAQ(faq);
     }
 }

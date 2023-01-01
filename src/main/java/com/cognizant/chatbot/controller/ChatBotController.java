@@ -1,8 +1,7 @@
 package com.cognizant.chatbot.controller;
 
-import com.cognizant.chatbot.entity.FAQ;
+import com.cognizant.chatbot.dto.Message;
 import com.cognizant.chatbot.service.ChatBotService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +11,21 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/chatbot")
 public class ChatBotController{
-    @Autowired
-    private ChatBotService chatBotService;
+    private final ChatBotService chatBotService;
 
-    //localhost:8080/chatbot?key=password
+    public ChatBotController(ChatBotService chatBotService) {
+        this.chatBotService = chatBotService;
+    }
+
     @GetMapping
-    public ResponseEntity<List<FAQ>> searchFAQ(@RequestParam(name = "key") String key){
-        List<FAQ> questions = chatBotService.searchQuestions(key);
+    public ResponseEntity<List<Message>> searchMessage(@RequestParam(name = "key") String key){
+        List<Message> questions = chatBotService.searchQuestions(key);
         return new ResponseEntity<>(questions, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Message> getMessageById(@PathVariable Long id){
+        Message message = chatBotService.getById(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }
